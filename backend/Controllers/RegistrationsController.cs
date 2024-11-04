@@ -1,9 +1,10 @@
-using System;
-using System.Threading.Tasks;
+// File: Controllers/RegistrationsController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
@@ -19,9 +20,9 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Registration>> CreateRegistration(Registration registration)
+        public async Task<ActionResult<Enrollment>> CreateRegistration(Enrollment enrollment)
         {
-            var course = await _context.Courses.FindAsync(registration.CourseId);
+            var course = await _context.Courses.FindAsync(enrollment.CourseId);
 
             if (course == null)
             {
@@ -33,28 +34,38 @@ namespace backend.Controllers
                 return BadRequest("Registration is closed for this course");
             }
 
-            registration.RegistrationDate = DateTime.UtcNow;
-            registration.Status = "Pending";
+            enrollment.EnrolledAt = DateTime.UtcNow;
+            enrollment.Status = "Pending";
 
-            _context.Registrations.Add(registration);
+            _context.Enrollments.Add(enrollment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetRegistration), new { id = registration.Id }, registration);
+            return CreatedAtAction(nameof(GetRegistration), new { id = enrollment.Id }, enrollment);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Registration>> GetRegistration(int id)
+        public async Task<ActionResult<Enrollment>> GetRegistration(int id)
         {
-            var registration = await _context.Registrations
+            var enrollment = await _context.Enrollments
                 .Include(r => r.Course)
+                .Include(r => r.Student)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
-            if (registration == null)
+            if (enrollment == null)
             {
                 return NotFound();
             }
 
-            return registration;
+            return enrollment;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Enrollment>>> GetAllRegistrations()
+        {
+            return await _context.Enrollments
+                .Include(r => r.Course)
+                .Include(r => r.Student)
+                .ToListAsync();
         }
     }
 }

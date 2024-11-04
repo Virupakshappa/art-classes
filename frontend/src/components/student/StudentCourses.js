@@ -1,10 +1,6 @@
 // File: src/components/student/StudentCourses.js
 import React from 'react';
-import { 
-  BookOpenIcon,
-  ClockIcon,
-  CheckCircleIcon
-} from '@heroicons/react/24/outline';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
 const StudentCourses = () => {
   const enrolledCourses = [

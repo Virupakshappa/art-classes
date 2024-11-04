@@ -1,12 +1,10 @@
 import React from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
   BookOpenIcon, 
   ClockIcon, 
-  AcademicCapIcon,
-  CalendarIcon 
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
-import { useAuth } from '../../contexts/AuthContext';
-
 const StudentDashboard = () => {
   const { user } = useAuth();
 

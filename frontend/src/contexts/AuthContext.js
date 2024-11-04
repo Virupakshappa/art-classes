@@ -1,5 +1,6 @@
-// File: src/contexts/AuthContext.js
+// File: frontend/src/contexts/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -8,35 +9,38 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for remembered user on initial load
-    const rememberedUser = localStorage.getItem('rememberedUser');
-    const sessionUser = sessionStorage.getItem('sessionUser');
-    
-    if (rememberedUser) {
-      setUser(JSON.parse(rememberedUser));
-    } else if (sessionUser) {
-      setUser(JSON.parse(sessionUser));
-    }
-    
-    setLoading(false);
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await api.get('/users/profile');
+          setUser(response.data);
+        } catch (error) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
+      setLoading(false);
+    };
+
+    initializeAuth();
   }, []);
 
-  const login = (userData, remember = false) => {
+  const login = (userData) => {
     setUser(userData);
-    
-    // Store user data based on remember preference
-    if (remember) {
-      localStorage.setItem('rememberedUser', JSON.stringify(userData));
-    } else {
-      sessionStorage.setItem('sessionUser', JSON.stringify(userData));
-    }
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  const logout = () => {
-    setUser(null);
-    // Clear both storages on logout
-    localStorage.removeItem('rememberedUser');
-    sessionStorage.removeItem('sessionUser');
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setUser(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
   };
 
   return (

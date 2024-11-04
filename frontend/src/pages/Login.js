@@ -1,7 +1,7 @@
-// File: src/pages/Login.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { authService } from '../services/api';
 import { 
   EyeIcon, 
   EyeSlashIcon,
@@ -13,6 +13,7 @@ const Login = () => {
   const { login, user } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -27,7 +28,7 @@ const Login = () => {
     }
   }, [user, navigate]);
 
-  // Test credentials
+  // Test credentials info - for development only
   const TEST_CREDENTIALS = {
     student: {
       email: 'student@test.com',
@@ -51,39 +52,54 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
     try {
-      const roleCredentials = TEST_CREDENTIALS[formData.role];
-      if (formData.email === roleCredentials.email && 
-          formData.password === roleCredentials.password) {
-        
-        // Handle remember me
-        if (rememberMe) {
-          localStorage.setItem('rememberedEmail', formData.email);
-        } else {
-          localStorage.removeItem('rememberedEmail');
-        }
+      // Call the backend API
+      const loginData = {
+        email: formData.email,
+        password: formData.password,
+        role: formData.role
+      };
 
-        const userData = {
-          id: formData.role === 'student' ? 1 : 2,
-          name: formData.role === 'student' ? 'John Student' : 'Sarah Instructor',
-          email: formData.email,
-          role: formData.role,
-          lastLogin: new Date().toISOString()
-        };
+      const response = await authService.login(loginData);
 
-        // Pass remember me preference to login
-        login(userData, rememberMe);
-        
-        // Navigate to appropriate dashboard
-        navigate(formData.role === 'student' ? '/student/dashboard' : '/instructor/dashboard');
+      // Handle remember me
+      if (rememberMe) {
+        localStorage.setItem('rememberedEmail', formData.email);
       } else {
-        setError('Invalid credentials. Please use test credentials shown below.');
+        localStorage.removeItem('rememberedEmail');
       }
+
+      // Store token
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+      }
+
+      // Update auth context with user data
+      login(response.user, rememberMe);
+      
+      // Navigate to appropriate dashboard
+      navigate(response.user.role === 'student' ? '/student/dashboard' : '/instructor/dashboard');
     } catch (err) {
-      setError('Failed to log in. Please try again.');
+      console.error('Login error:', err);
+      setError(err.message || 'Failed to log in. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  export const authService = {
+  login: async (loginData) => {
+    try {
+      const response = await api.post('/auth/login', loginData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to log in' };
+    }
+  },
+  // Add other auth-related functions here
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -98,7 +114,7 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Test Credentials Info */}
+        {/* Test Credentials Info - Remove in production */}
         <div className="bg-gray-800/50 rounded-xl p-4 text-sm">
           <h3 className="font-semibold text-purple-400 mb-2">Test Credentials</h3>
           <div className="space-y-2">
@@ -201,9 +217,23 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-gray-900 transition-colors"
+              disabled={isLoading}
+              className={`w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 
+                focus:ring-offset-gray-900 transition-colors
+                ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
             >
-              Sign in
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </span>
+              ) : (
+                'Sign in'
+              )}
             </button>
           </form>
         </div>

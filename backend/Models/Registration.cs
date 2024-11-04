@@ -1,3 +1,4 @@
+// File: Models/Registration.cs
 using System;
 
 namespace backend.Models
@@ -6,12 +7,12 @@ namespace backend.Models
     {
         public int Id { get; set; }
         public int CourseId { get; set; }
-        public string StudentName { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public string StudentName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
         public DateTime RegistrationDate { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
 
-        public virtual Course Course { get; set; }
+        public Course? Course { get; set; }
     }
 }
