@@ -1,50 +1,60 @@
-[ApiController]
-[Route("api/[controller]")]
-public class RegistrationsController : ControllerBase
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using backend.Data;
+using backend.Models;
+
+namespace backend.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public RegistrationsController(ApplicationDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class RegistrationsController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    [HttpPost]
-    public async Task<ActionResult<Registration>> CreateRegistration(Registration registration)
-    {
-        var course = await _context.Courses.FindAsync(registration.CourseId);
-
-        if (course == null)
+        public RegistrationsController(ApplicationDbContext context)
         {
-            return BadRequest("Course not found");
+            _context = context;
         }
 
-        if (!course.IsRegistrationOpen)
+        [HttpPost]
+        public async Task<ActionResult<Registration>> CreateRegistration(Registration registration)
         {
-            return BadRequest("Registration is closed for this course");
+            var course = await _context.Courses.FindAsync(registration.CourseId);
+
+            if (course == null)
+            {
+                return BadRequest("Course not found");
+            }
+
+            if (!course.IsRegistrationOpen)
+            {
+                return BadRequest("Registration is closed for this course");
+            }
+
+            registration.RegistrationDate = DateTime.UtcNow;
+            registration.Status = "Pending";
+
+            _context.Registrations.Add(registration);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetRegistration), new { id = registration.Id }, registration);
         }
 
-        registration.RegistrationDate = DateTime.UtcNow;
-        registration.Status = "Pending";
-
-        _context.Registrations.Add(registration);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetRegistration), new { id = registration.Id }, registration);
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Registration>> GetRegistration(int id)
-    {
-        var registration = await _context.Registrations
-            .Include(r => r.Course)
-            .FirstOrDefaultAsync(r => r.Id == id);
-
-        if (registration == null)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Registration>> GetRegistration(int id)
         {
-            return NotFound();
-        }
+            var registration = await _context.Registrations
+                .Include(r => r.Course)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
-        return registration;
+            if (registration == null)
+            {
+                return NotFound();
+            }
+
+            return registration;
+        }
     }
 }

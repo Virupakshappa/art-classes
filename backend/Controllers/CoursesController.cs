@@ -1,42 +1,55 @@
-// File: Controllers/CoursesController.cs
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using backend.Data;
+using backend.Models;
 
-[ApiController]
-[Route("api/[controller]")]
-public class CoursesController : ControllerBase
+namespace backend.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public CoursesController(ApplicationDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CoursesController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
-    {
-        return await _context.Courses.ToListAsync();
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Course>> GetCourse(int id)
-    {
-        var course = await _context.Courses.FindAsync(id);
-
-        if (course == null)
+        public CoursesController(ApplicationDbContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        return course;
-    }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
+        {
+            return await _context.Courses
+                .Include(c => c.Category)
+                .Include(c => c.Instructor)
+                .ToListAsync();
+        }
 
-    [HttpPost]
-    public async Task<ActionResult<Course>> CreateCourse(Course course)
-    {
-        _context.Courses.Add(course);
-        await _context.SaveChangesAsync();
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Course>> GetCourse(int id)
+        {
+            var course = await _context.Courses
+                .Include(c => c.Category)
+                .Include(c => c.Instructor)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-        return CreatedAtAction(nameof(GetCourse), new { id = course.Id }, course);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return course;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Course>> CreateCourse(Course course)
+        {
+            _context.Courses.Add(course);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetCourse), new { id = course.Id }, course);
+        }
     }
 }
