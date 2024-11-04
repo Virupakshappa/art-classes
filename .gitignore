@@ -1,0 +1,36 @@
+# Dependencies
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+
+# Production
+frontend/build
+
+# Testing
+frontend/coverage
+
+# Misc
+frontend/.DS_Store
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# Backend
+backend/bin/
+backend/obj/
+backend/.vs/
+backend/*.user
+backend/*.suo
+backend/appsettings.Development.json
+backend/appsettings.Production.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
