@@ -8,38 +8,62 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  /* Body text uses the phone's own font - nothing to download */
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #111827; /* gray-900 */
-  color: #f3f4f6; /* gray-100 */
+  background-color: #160a10;
+  color: #f8efe3;
 }
 
 #root {
   min-height: 100vh;
 }
 
-.bg-grid-white {
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 10px;
+/* Anchor jumps land below the fixed header */
+section[id] {
+  scroll-margin-top: 5rem;
 }
 
-::-webkit-scrollbar-track {
-  background: #1f2937; /* gray-800 */
+:focus-visible {
+  outline: 2px solid #e8c87a;
+  outline-offset: 2px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #4c1d95; /* purple-900 */
-  border-radius: 5px;
+/* Respect the phone's "reduce motion" / battery saver setting */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #6d28d9; /* purple-700 */
+@layer components {
+  /* Ilkal-style temple (gopura) border woven in zari gold - a 300-byte SVG tile */
+  .temple-border {
+    height: 14px;
+    background-color: #2a141d;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='14'%3E%3Cpath d='M0 14h4v-4h4V6l4-4 4 4v4h4v4h4' fill='%23d4af37'/%3E%3Ccircle cx='12' cy='9' r='1.6' fill='%23ff3d8b'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: center bottom;
+  }
+
+  .temple-border-down {
+    transform: scaleY(-1);
+  }
+
+  /* Pallu stripes: thin bands of the saree palette */
+  .pallu {
+    height: 6px;
+    background: linear-gradient(90deg,
+      #ff3d8b 0 25%, #e8c87a 25% 50%, #00b39a 50% 75%, #f8efe3 75% 100%);
+  }
 }

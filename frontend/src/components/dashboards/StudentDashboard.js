@@ -31,9 +31,9 @@ const StudentDashboard = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 sm:space-y-8">
       {/* Welcome Section */}
-      <section className="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-8">
+      <section className="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-5 sm:p-8">
         <h1 className="text-2xl font-bold text-white mb-2">
           Welcome back, {user?.name}!
         </h1>
@@ -43,9 +43,9 @@ const StudentDashboard = () => {
       </section>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          <div className="flex items-center space-x-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
+        <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <BookOpenIcon className="h-8 w-8 text-purple-400" />
             <div>
               <p className="text-gray-400">Enrolled Courses</p>
@@ -53,8 +53,8 @@ const StudentDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          <div className="flex items-center space-x-4">
+        <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <ClockIcon className="h-8 w-8 text-purple-400" />
             <div>
               <p className="text-gray-400">Hours Completed</p>
@@ -62,8 +62,8 @@ const StudentDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          <div className="flex items-center space-x-4">
+        <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <AcademicCapIcon className="h-8 w-8 text-purple-400" />
             <div>
               <p className="text-gray-400">Certificates Earned</p>
@@ -74,17 +74,17 @@ const StudentDashboard = () => {
       </div>
 
       {/* Enrolled Courses */}
-      <section className="bg-gray-800/30 rounded-xl p-6">
+      <section className="bg-gray-800/30 rounded-xl p-4 sm:p-6">
         <h2 className="text-xl font-bold text-white mb-6">Enrolled Courses</h2>
         <div className="space-y-4">
           {enrolledCourses.map(course => (
             <div key={course.id} className="bg-gray-800/50 rounded-lg p-4">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <div>
                   <h3 className="text-white font-semibold">{course.title}</h3>
                   <p className="text-gray-400">Instructor: {course.instructor}</p>
                 </div>
-                <div className="text-right">
+                <div className="sm:text-right">
                   <p className="text-purple-400">Next Class</p>
                   <p className="text-gray-300">{course.nextClass}</p>
                 </div>
@@ -107,16 +107,16 @@ const StudentDashboard = () => {
       </section>
 
       {/* Upcoming Assignments */}
-      <section className="bg-gray-800/30 rounded-xl p-6">
+      <section className="bg-gray-800/30 rounded-xl p-4 sm:p-6">
         <h2 className="text-xl font-bold text-white mb-6">Upcoming Assignments</h2>
         <div className="space-y-4">
           {upcomingAssignments.map(assignment => (
-            <div key={assignment.id} className="bg-gray-800/50 rounded-lg p-4 flex justify-between items-center">
+            <div key={assignment.id} className="bg-gray-800/50 rounded-lg p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
               <div>
                 <h3 className="text-white font-semibold">{assignment.title}</h3>
                 <p className="text-gray-400">{assignment.course}</p>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right">
                 <p className="text-purple-400">Due Date</p>
                 <p className="text-gray-300">{assignment.dueDate}</p>
               </div>

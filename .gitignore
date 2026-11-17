@@ -34,3 +34,5 @@ backend/appsettings.Production.json
 .vscode/
 *.swp
 *.swo
+# Local Netlify folder
+.netlify
