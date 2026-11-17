@@ -1,7 +1,7 @@
 // Service worker: keeps the app shell and static files on the device so
 // repeat visits load instantly and the app still opens on weak or no network.
-const CACHE = 'dancing-needles-v3';
-const SHELL = ['/', '/index.html', '/manifest.json', '/favicon.ico', '/fonts/cormorant-600-latin.woff2'];
+const CACHE = 'dancing-needles-v4';
+const SHELL = ['/', '/index.html', '/manifest.json', '/favicon.ico', '/favicon.svg', '/fonts/cormorant-600-latin.woff2'];
 const NAV_TIMEOUT_MS = 4000;
 
 self.addEventListener('install', (event) => {
