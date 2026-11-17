@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#160a10"/>
+  <!-- Needle: gold, point at bottom-left, rounded head with an eye at top-right -->
+  <path d="M10 54 L44.5 15.5 A4.6 4.6 0 0 1 51 22 Z" fill="#e8c87a"/>
+  <ellipse cx="46.6" cy="19.4" rx="1.3" ry="3.2" transform="rotate(45 46.6 19.4)" fill="#160a10"/>
+  <!-- Thread through the eye, looping down -->
+  <path d="M46.6 19.4 C60 26 52 40 40 40 C30 40 30 50 40 54" fill="none" stroke="#ff3d8b" stroke-width="3" stroke-linecap="round"/>
+</svg>
