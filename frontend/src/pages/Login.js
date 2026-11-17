@@ -89,26 +89,14 @@ const Login = () => {
     }
   };
 
-  export const authService = {
-  login: async (loginData) => {
-    try {
-      const response = await api.post('/auth/login', loginData);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || { message: 'Failed to log in' };
-    }
-  },
-  // Add other auth-related functions here
-};
-
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <div className="flex justify-center">
             <LockClosedIcon className="h-12 w-12 text-purple-400" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">Sign in to your account</h2>
+          <h2 className="mt-6 text-2xl sm:text-3xl font-bold text-white">Sign in to your account</h2>
           <p className="mt-2 text-gray-400">
             Access your art classes and continue your creative journey
           </p>
@@ -131,7 +119,7 @@ const Login = () => {
           </div>
         </div>
 
-        <div className="bg-gray-800/50 rounded-xl p-8 backdrop-blur-sm shadow-xl">
+        <div className="bg-gray-800/50 rounded-xl p-5 sm:p-8 shadow-xl">
           {error && (
             <div className="mb-4 bg-red-900/50 text-red-200 p-3 rounded-lg">
               {error}
@@ -146,7 +134,9 @@ const Login = () => {
               <input
                 type="email"
                 required
-                className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-white"
+                autoComplete="email"
+                inputMode="email"
+                className="mt-1 block w-full px-3 py-2.5 bg-gray-700 border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-white"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
@@ -160,12 +150,14 @@ const Login = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   required
-                  className="block w-full bg-gray-700 border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-white pr-10"
+                  autoComplete="current-password"
+                  className="block w-full px-3 py-2.5 bg-gray-700 border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-white pr-10"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
                 <button
                   type="button"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                   className="absolute inset-y-0 right-0 px-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
@@ -183,7 +175,7 @@ const Login = () => {
                 Role
               </label>
               <select
-                className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-white"
+                className="mt-1 block w-full px-3 py-2.5 bg-gray-700 border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-white"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               >
@@ -218,7 +210,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 
+              className={`w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 
                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 
                 focus:ring-offset-gray-900 transition-colors
                 ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}

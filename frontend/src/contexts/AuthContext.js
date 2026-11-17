@@ -4,26 +4,37 @@ import api from '../services/api';
 
 const AuthContext = createContext(null);
 
+const getStoredUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem('user'));
+  } catch {
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Start from the saved user so the app renders immediately,
+  // even on a slow network, and verify the session in the background.
+  const [user, setUser] = useState(getStoredUser);
 
   useEffect(() => {
-    const initializeAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await api.get('/users/profile');
-          setUser(response.data);
-        } catch (error) {
+    const verifySession = async () => {
+      if (!localStorage.getItem('token')) return;
+      try {
+        const response = await api.get('/users/profile');
+        setUser(response.data);
+        localStorage.setItem('user', JSON.stringify(response.data));
+      } catch (error) {
+        // Only sign out when the server rejects the token, not when offline
+        if (error.response?.status === 401) {
+          setUser(null);
           localStorage.removeItem('token');
           localStorage.removeItem('user');
         }
       }
-      setLoading(false);
     };
 
-    initializeAuth();
+    verifySession();
   }, []);
 
   const login = (userData) => {
@@ -35,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post('/auth/logout');
     } catch (error) {
-      console.error('Logout error:', error);
+      // Ignore - local sign out still happens
     } finally {
       setUser(null);
       localStorage.removeItem('token');
@@ -44,8 +55,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, login, logout, loading: false }}>
+      {children}
     </AuthContext.Provider>
   );
 };

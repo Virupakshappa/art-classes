@@ -33,9 +33,9 @@ const InstructorDashboard = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 sm:space-y-8">
       {/* Welcome Section */}
-      <section className="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-8">
+      <section className="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-2xl p-5 sm:p-8">
         <h1 className="text-2xl font-bold text-white mb-2">
           Welcome back, {user?.name}!
         </h1>
@@ -45,18 +45,18 @@ const InstructorDashboard = () => {
       </section>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          <div className="flex items-center space-x-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+        <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <UserGroupIcon className="h-8 w-8 text-purple-400" />
             <div>
-              <p className="text-gray-400">Total Students</p>
+              <p className="text-gray-400 text-sm sm:text-base">Total Students</p>
               <p className="text-2xl font-bold text-white">45</p>
             </div>
           </div>
         </div>
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          <div className="flex items-center space-x-4">
+        <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <ClipboardIcon className="h-8 w-8 text-purple-400" />
             <div>
               <p className="text-gray-400">Active Courses</p>
@@ -64,8 +64,8 @@ const InstructorDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          <div className="flex items-center space-x-4">
+        <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <ChartBarIcon className="h-8 w-8 text-purple-400" />
             <div>
               <p className="text-gray-400">Avg. Rating</p>
@@ -73,8 +73,8 @@ const InstructorDashboard = () => {
             </div>
           </div>
         </div>
-        <div className="bg-gray-800/50 rounded-xl p-6">
-          <div className="flex items-center space-x-4">
+        <div className="bg-gray-800/50 rounded-xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <CalendarIcon className="h-8 w-8 text-purple-400" />
             <div>
               <p className="text-gray-400">Classes This Week</p>
@@ -85,8 +85,8 @@ const InstructorDashboard = () => {
       </div>
 
       {/* Active Courses */}
-      <section className="bg-gray-800/30 rounded-xl p-6">
-        <div className="flex justify-between items-center mb-6">
+      <section className="bg-gray-800/30 rounded-xl p-4 sm:p-6">
+        <div className="flex flex-wrap gap-3 justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-white">Active Courses</h2>
           <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
             Create New Course
@@ -95,12 +95,12 @@ const InstructorDashboard = () => {
         <div className="space-y-4">
           {activeCourses.map(course => (
             <div key={course.id} className="bg-gray-800/50 rounded-lg p-4">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                 <div>
                   <h3 className="text-white font-semibold">{course.title}</h3>
                   <p className="text-gray-400">{course.students} Students Enrolled</p>
                 </div>
-                <div className="text-right">
+                <div className="sm:text-right">
                   <p className="text-purple-400">Next Session</p>
                   <p className="text-gray-300">{course.nextSession}</p>
                 </div>
@@ -123,16 +123,16 @@ const InstructorDashboard = () => {
       </section>
 
       {/* Upcoming Classes */}
-      <section className="bg-gray-800/30 rounded-xl p-6">
+      <section className="bg-gray-800/30 rounded-xl p-4 sm:p-6">
         <h2 className="text-xl font-bold text-white mb-6">Upcoming Classes</h2>
         <div className="space-y-4">
           {upcomingClasses.map(class_ => (
-            <div key={class_.id} className="bg-gray-800/50 rounded-lg p-4 flex justify-between items-center">
+            <div key={class_.id} className="bg-gray-800/50 rounded-lg p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
               <div>
                 <h3 className="text-white font-semibold">{class_.course}</h3>
                 <p className="text-gray-400">{class_.students} Students</p>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right">
                 <p className="text-purple-400">{class_.date}</p>
                 <p className="text-gray-300">{class_.time}</p>
               </div>
